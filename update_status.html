@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Update Status</h2>
+  <form id="statusForm" method="post">
+    {% csrf_token %}
+    <div id="flightList">
+      {% for flight in flights %}
+        <div>
+          <label>{{ flight.flight_number }}:</label>
+          <select name="selected_statuses[]" required>
+            <option value="{{ flight.flight_number }}:Taken Off">Taken Off</option>
+            <option value="{{ flight.flight_number }}:Landing">Landing</option>
+          </select>
+        </div>
+      {% endfor %}
+    </div>
+    <button type="submit">Update Status</button>
+  </form>
+  <script>
+    document.getElementById('statusForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const formData = new FormData(this);
+      const selectedStatuses = formData.getAll('selected_statuses[]');
+
+      fetch("{% url 'update_status' %}", {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ selected_statuses: selectedStatuses })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Status updated successfully!');
+          location.reload();
+        } else {
+          alert('Failed to update status.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred.');
+      });
+    });
+  </script>
+{% endblock %}

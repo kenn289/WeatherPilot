@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Pilot Dashboard</h2>
+  <form method="post">
+    {% csrf_token %}
+    <label for="flight_number">Flight Number:</label>
+    <input type="text" id="flight_number" name="flight_number" required>
+    <label for="departure_location">Departure Location:</label>
+    <input type="text" id="departure_location" name="departure_location" required>
+    <label for="arrival_location">Arrival Location:</label>
+    <input type="text" id="arrival_location" name="arrival_location" required>
+    <label for="status">Status:</label>
+    <input type="text" id="status" name="status" required>
+    <label for="estimated_arrival_time">Estimated Arrival Time:</label>
+    <input type="datetime-local" id="estimated_arrival_time" name="estimated_arrival_time" required>
+    <button type="submit">Update Flight</button>
+  </form>
+
+  <form method="post" action="{% url 'clear_table' %}">
+    {% csrf_token %}
+    <button type="submit">Clear Table</button>
+  </form>
+
+  <h3>Flights</h3>
+  <table>
+    <tr>
+      <th>Flight Number</th>
+      <th>Departure Location</th>
+      <th>Arrival Location</th>
+      <th>Status</th>
+      <th>Estimated Arrival Time</th>
+    </tr>
+    {% for flight in flights %}
+      <tr>
+        <td>{{ flight.flight_number }}</td>
+        <td>{{ flight.departure_location }}</td>
+        <td>{{ flight.arrival_location }}</td>
+        <td>{{ flight.status }}</td>
+        <td>{{ flight.estimated_arrival_time }}</td>
+        <td><a href="#" class="weather-link" data-flight="{{ flight.flight_number }}">View Weather</a></td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <div id="weather-info" style="display:none;">
+    <h3>Weather Information</h3>
+    <div id="weather-data">
+      <!-- Weather data will be inserted here via JavaScript -->
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('.weather-link').click(function(e) {
+        e.preventDefault();
+        var flightNumber = $(this).data('flight');
+        $.ajax({
+          type: 'GET',
+          url: `/get_weather_info/${flightNumber}/`,
+          success: function(response) {
+            if (response.success) {
+              $('#weather-data').html(`
+                <p>City: ${response.weather_data.city}</p>
+                <p>Temperature: ${response.weather_data.temperature} &#8451;</p>
+                <p>Humidity: ${response.weather_data.humidity}%</p>
+                <p>Weather Description: ${response.weather_data.description}</p>
+              `);
+              $('#weather-info').show();
+            } else {
+              alert('Failed to fetch weather information');
+            }
+          },
+          error: function(error) {
+            console.log('Error:', error);
+          }
+        });
+      });
+    });
+  </script>
+{% endblock %}

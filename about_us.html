@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<div class="about-us-container">
+    <h1>About Us</h1>
+    <p>Welcome to our project! We are building a flight management system using Django, focusing on user authentication, real-time weather updates, and flight status management. Our goal is to provide a seamless experience for staff and pilots to efficiently manage flight information. The system includes user registration and authentication, ensuring unique usernames and emails, and proper password matching. Based on their roles, users are directed to appropriate dashboards. 
+
+        Weather data is fetched from the OpenWeatherMap API, providing current and forecasted conditions for specified cities, and rendered in the home view. Staff and pilot dashboards display relevant flight information, with staff viewing flights based on their city and pilots able to update and view all flights. 
+        
+        Flight management includes functions for updating flight statuses and clearing the flight table. The system also identifies the nearest airport to a given city and fetches weather information for flight arrival locations, potentially diverting flights based on adverse weather conditions. This project aims to create a comprehensive and efficient flight management system.</p>
+
+    <h2>Our Team</h2>
+    <div class="about-person">
+        <img src="{% static 'images/ceo_image.png' %}" alt="CEO">
+        <h3>John Doe</h3>
+        <p>CEO</p>
+        <p>John leads our team with a vision for innovation and excellence. He has over 20 years of experience in the aviation industry.</p>
+    </div>
+    <div class="about-person">
+        <img src="{% static 'images/cto_image.png' %}" alt="CTO">
+        <h3>Jane Smith</h3>
+        <p>CTO</p>
+        <p>Jane is responsible for overseeing the technical aspects of the project, ensuring we use the best tools and technologies.</p>
+    </div>
+    <div class="about-person">
+        <img src="{% static 'images/coo_image.png' %}" alt="COO">
+        <h3>Mark Johnson</h3>
+        <p>COO</p>
+        <p>Mark manages the operations and ensures that everything runs smoothly, coordinating between different departments.</p>
+    </div>
+</div>
+{% endblock %}

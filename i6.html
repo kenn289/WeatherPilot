@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="weather-container">
+    <h1>Weather Information</h1>
+    <form method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" required>
+        <button type="submit">Get Weather</button>
+    </form>
+
+    {% if weather_data %}
+    <div class="current-weather">
+        <h2>Current Weather in {{ weather_data.city }}</h2>
+        <p>Temperature: {{ weather_data.temperature }}°C</p>
+        <p>Feels Like: {{ weather_data.feels_like }}°C</p>
+        <p>Min Temp: {{ weather_data.temp_min }}°C</p>
+        <p>Max Temp: {{ weather_data.temp_max }}°C</p>
+        <p>Pressure: {{ weather_data.pressure }} hPa</p>
+        <p>Humidity: {{ weather_data.humidity }}%</p>
+        <p>Visibility: {{ weather_data.visibility }} m</p>
+        <p>Wind Speed: {{ weather_data.wind_speed }} m/s</p>
+        <p>Wind Direction: {{ weather_data.wind_deg }}°</p>
+        <p>Description: {{ weather_data.description }}</p>
+        <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}@2x.png" alt="weather icon">
+        <p>Country: {{ weather_data.country }}</p>
+        <p>Sunrise: {{ weather_data.sunrise }}</p>
+        <p>Sunset: {{ weather_data.sunset }}</p>
+    </div>
+    {% endif %}
+
+    {% if forecast_data %}
+    <div class="forecast-weather">
+        <h2>Weather Forecast</h2>
+        <ul>
+            {% for forecast in forecast_data %}
+            <li>
+                <p>Date and Time: {{ forecast.dt_txt }}</p>
+                <p>Temperature: {{ forecast.main.temp }}°C</p>
+                <p>Pressure: {{ forecast.main.pressure }} hPa</p>
+                <p>Humidity: {{ forecast.main.humidity }}%</p>
+                <p>Wind Speed: {{ forecast.wind.speed }} m/s</p>
+                <p>Description: {{ forecast.weather.0.description }}</p>
+                <img src="http://openweathermap.org/img/wn/{{ forecast.weather.0.icon }}@2x.png" alt="weather icon">
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if alerts %}
+    <div class="weather-alerts">
+        <h2>Weather Alerts</h2>
+        <ul>
+            {% for alert in alerts %}
+            <li>
+                <p>Event: {{ alert.event }}</p>
+                <p>Start: {{ alert.start }}</p>
+                <p>End: {{ alert.end }}</p>
+                <p>Description: {{ alert.description }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if error_message %}
+    <div class="error-message">
+        <p>{{ error_message }}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
