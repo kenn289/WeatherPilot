@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Clear Table</h2>
+  <form id="clearForm" method="post">
+    {% csrf_token %}
+    <button type="submit">Clear Table</button>
+  </form>
+  <script>
+    document.getElementById('clearForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      fetch("{% url 'clear_table' %}", {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Table cleared successfully!');
+          location.reload();
+        } else {
+          alert('Failed to clear table.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred.');
+      });
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Staff Dashboard</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Flight Number</th>
+        <th>Departure Location</th>
+        <th>Arrival Location</th>
+        <th>Status</th>
+        <th>Estimated Arrival Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for flight in flights %}
+        <tr>
+          <td>{{ flight.flight_number }}</td>
+          <td>{{ flight.departure_location }}</td>
+          <td>{{ flight.arrival_location }}</td>
+          <td>{{ flight.status }}</td>
+          <td>{{ flight.estimated_arrival_time }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
